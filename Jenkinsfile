@@ -13,13 +13,12 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
-            agent { label 'docker-agent' }
             when {
                 branch 'master'
             }
             steps {
                 script {
-                    app = docker.build(DOCKER_IMAGE_NAME)
+                    app = docker.withServer('tcp://host.docker.internal:2375').build(DOCKER_IMAGE_NAME)
                     app.inside {
                         sh 'echo Hello, World!'
                     }
@@ -33,7 +32,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                    docker.withServer('tcp://host.docker.internal:2375').withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
