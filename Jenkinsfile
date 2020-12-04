@@ -17,6 +17,7 @@ pipeline {
                 branch 'master'
             }
             steps {
+                input 'Keep going?'
                 script {
                     app = docker.withServer('tcp://host.docker.internal:2375').build(DOCKER_IMAGE_NAME)
                     app.inside {
