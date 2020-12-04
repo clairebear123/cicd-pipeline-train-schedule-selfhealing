@@ -13,6 +13,7 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
+            agent { label 'docker-agent' }
             when {
                 branch 'master'
             }
@@ -26,6 +27,7 @@ pipeline {
             }
         }
         stage('Push Docker Image') {
+            agent { label 'docker-agent' }
             when {
                 branch 'master'
             }
